@@ -93,6 +93,23 @@
   .intro-strip p{ margin-top:14px; font-size:13.5px; color: var(--ink-dim); font-weight:300; max-width:520px; margin-inline:auto; line-height:1.85; }
   .intro-rule{ width:44px; height:1px; background: var(--ink-faint); margin: 26px auto 0; }
 
+  .cat-filter{
+    display:flex; gap:8px; flex-wrap:wrap; justify-content:center;
+    padding: 30px 28px 6px; max-width:1000px; margin:0 auto;
+  }
+  .chip{
+    padding:7px 16px; font-size:11px; letter-spacing:0.07em; text-transform:uppercase; color: var(--ink-dim);
+    background: var(--bg-panel); border:1px solid var(--line); border-radius:999px; cursor:pointer;
+    font-family: var(--sans); font-weight:500; transition: all .2s ease; white-space:nowrap;
+  }
+  .chip:hover{ border-color: rgba(10,10,10,0.3); color: var(--ink); }
+  .chip.active{ background: var(--ink); color:#fff; border-color: var(--ink); }
+  .empty-state{ text-align:center; padding: 60px 20px; color: var(--ink-faint); font-size:13px; letter-spacing:0.06em; }
+  @media (max-width: 640px){
+    .cat-filter{ justify-content:flex-start; overflow-x:auto; flex-wrap:nowrap; padding:16px 16px 4px; -webkit-overflow-scrolling:touch; }
+    .chip{ flex:none; }
+  }
+
   /* ---------- GALERÍA XUSTIFICADA (tipo Google Photos / Pixieset) ---------- */
   .grid{
     display:flex; flex-direction:column; gap:10px;
@@ -267,7 +284,10 @@
       <div class="intro-rule"></div>
     </div>
 
+    <div class="cat-filter" id="catFilter"></div>
+
     <div class="grid" id="grid"></div>
+    <div class="empty-state" id="emptyState" style="display:none;">Non hai fotos nesta categoría.</div>
 
     <footer class="bottom">
       <div class="bottom-rule"></div>
@@ -321,21 +341,60 @@
   </div>
 
 <script>
-  // ---- Datos de mostra (en produción: fotos finais reais do cliente, servidas dende R2/CDN) ----
+  // ---- Categorías (etiquetas) — mesmas que na galería de preselección ----
+  const CATEGORIES = [
+    { key: 'preparativos', label: 'Preparativos' },
+    { key: 'cerimonia', label: 'Cerimonia' },
+    { key: 'parella', label: 'Sesión de parella' },
+    { key: 'grupos', label: 'Familia e grupos' },
+    { key: 'banquete', label: 'Banquete' },
+    { key: 'festa', label: 'Festa' }
+  ];
+
+  // ---- Datos de mostra (en produción: fotos finais reais do cliente, cargadas dende manifest.json) ----
   // w/h son as dimensións reais da foto — en produción viría do propio ficheiro subido a R2,
   // e é iso o que permite que a galería xustificada (tipo Google Photos/Pixieset) calcule filas
   // que encaixan perfectas ancho a ancho, con columnas de largura variable.
   const TOTAL = 24;
   const ASPECTS = [[1000,1250],[1200,800],[1000,1500],[1400,1000],[1000,1350],[1300,950],[900,1200],[1500,1000]];
-  const photos = Array.from({length: TOTAL}, (_, i) => {
+  let photos = Array.from({length: TOTAL}, (_, i) => {
     const [w, h] = ASPECTS[i % ASPECTS.length];
-    return { id: i + 1, src: `https://picsum.photos/id/${1050 + i}/${w}/${h}`, w, h };
+    const tag = CATEGORIES[i % CATEGORIES.length].key;
+    return { id: i + 1, src: `https://picsum.photos/id/${1050 + i}/${w}/${h}`, w, h, tags: [tag] };
   });
 
+  // Se existe un manifest.json xunto a este HTML (xerado a partir do que subiches a R2), substitúe
+  // os datos de mostra polos reais, sen romper o prototipo se aínda non existe.
+  fetch('./manifest.json').then(r => r.ok ? r.json() : null).then(data => {
+    if (Array.isArray(data) && data.length) {
+      photos = data.map((p, i) => ({ tags: [], ...p, id: p.id ?? i + 1 }));
+      buildCategoryChips();
+      render();
+    }
+  }).catch(() => {});
+
   const grid = document.getElementById('grid');
+  const emptyState = document.getElementById('emptyState');
+  let category = 'all';
+  let currentList = [];
   let observer;
   const entered = new Set();
   let resizeTimer;
+
+  function buildCategoryChips(){
+    const wrap = document.getElementById('catFilter');
+    const present = new Set(photos.flatMap(p => p.tags || []));
+    const cats = CATEGORIES.filter(c => present.has(c.key));
+    if (!cats.length) { wrap.innerHTML = ''; return; }
+    wrap.innerHTML = `<button class="chip${category === 'all' ? ' active' : ''}" data-cat="all" onclick="setCategory('all')">Todas</button>` +
+      cats.map(c => `<button class="chip${category === c.key ? ' active' : ''}" data-cat="${c.key}" onclick="setCategory('${c.key}')">${c.label}</button>`).join('');
+  }
+
+  function setCategory(cat){
+    category = cat;
+    document.querySelectorAll('.chip').forEach(el => el.classList.toggle('active', el.dataset.cat === cat));
+    render();
+  }
 
   function makeObserver(){
     if (observer) observer.disconnect();
@@ -375,6 +434,8 @@
   function render(){
     if (!observer) makeObserver();
     grid.innerHTML = '';
+    const list = photos.filter(p => category === 'all' || (p.tags || []).includes(category));
+    emptyState.style.display = list.length === 0 ? 'block' : 'none';
     const containerWidth = grid.clientWidth || grid.parentElement.clientWidth;
     const isMobile = window.innerWidth < 640;
     const targetHeight = isMobile ? 130 : 250;
@@ -399,7 +460,8 @@
       grid.appendChild(rowEl);
     }
 
-    photos.forEach((p) => {
+    currentList = list;
+    list.forEach((p) => {
       const ar = p.w / p.h;
       row.push({ p, ar });
       aspectSum += ar;
@@ -415,6 +477,7 @@
   function enterGallery(){
     document.getElementById('cover').style.display = 'none';
     document.getElementById('app').style.display = 'block';
+    buildCategoryChips();
     render();
   }
 
@@ -462,7 +525,7 @@
   // ---- Lightbox ----
   let lbIndex = -1;
   function openLightbox(id){
-    lbIndex = photos.findIndex(p => p.id === id);
+    lbIndex = currentList.findIndex(p => p.id === id);
     if (lbIndex === -1) return;
     updateLightbox();
     document.getElementById('lightbox').classList.add('open');
@@ -471,20 +534,23 @@
   function closeLightbox(){
     document.getElementById('lightbox').classList.remove('open');
     document.body.style.overflow = '';
+    lbIndex = -1;
   }
   function navLightbox(dir){
-    lbIndex = (lbIndex + dir + photos.length) % photos.length;
+    if (!currentList.length) return;
+    lbIndex = (lbIndex + dir + currentList.length) % currentList.length;
     updateLightbox();
   }
   function updateLightbox(){
-    const p = photos[lbIndex];
+    const p = currentList[lbIndex];
+    if (!p) return;
     const img = document.getElementById('lbImg');
     img.src = p.src;
     img.alt = 'Foto ' + String(p.id).padStart(3,'0');
     document.getElementById('lbNum').textContent = String(p.id).padStart(3,'0') + ' / ' + String(TOTAL).padStart(3,'0');
   }
   function downloadCurrentLightbox(){
-    downloadOne(photos[lbIndex].id);
+    downloadOne(currentList[lbIndex].id);
   }
   document.addEventListener('keydown', (e) => {
     if (!document.getElementById('lightbox').classList.contains('open')) return;
