@@ -25,7 +25,7 @@
     --shadow-md: 0 4px 16px rgba(0,0,0,0.35);
   }
   *{ box-sizing: border-box; margin:0; padding:0; }
-  html,body{ background: var(--bg); color: var(--white); font-family: var(--sans); }
+  html,body{ background: var(--bg); color: var(--white); font-family: var(--sans); overflow-x:hidden; }
   body{ min-height:100vh; -webkit-font-smoothing:antialiased; }
   a{ color:inherit; }
 
@@ -120,8 +120,8 @@
   .chip:hover{ border-color: rgba(255,255,255,0.35); color: var(--white); }
   .chip.active{ background: var(--white); color:#0a0a0a; border-color: var(--white); }
   @media (max-width: 640px){
-    .cat-filter{ justify-content:flex-start; overflow-x:auto; flex-wrap:nowrap; padding:16px 16px 6px; -webkit-overflow-scrolling:touch; }
-    .chip{ flex:none; }
+    .cat-filter{ justify-content:center; flex-wrap:wrap; padding:16px 16px 6px; }
+    .chip{ padding:6px 13px; font-size:10.5px; }
   }
 
   .grid{
@@ -478,6 +478,13 @@
     render();
   }
 
+  // clientWidth inclúe o padding do propio elemento — para o algoritmo de filas precisamos
+  // só o espazo interior real (sen o padding), se non as fotos desbordan lateralmente.
+  function getInnerWidth(el){
+    const cs = getComputedStyle(el);
+    return el.clientWidth - parseFloat(cs.paddingLeft || 0) - parseFloat(cs.paddingRight || 0);
+  }
+
   function makeObserver(){
     if (observer) observer.disconnect();
     observer = new IntersectionObserver((entries) => {
@@ -539,7 +546,7 @@
       emptyState.style.display = 'none';
     }
 
-    const containerWidth = grid.clientWidth || grid.parentElement.clientWidth;
+    const containerWidth = getInnerWidth(grid) || grid.parentElement.clientWidth;
     const { targetHeight, gap } = getLayoutParams(window.innerWidth);
 
     let row = [], aspectSum = 0;
