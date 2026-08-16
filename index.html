@@ -278,9 +278,16 @@
     .tab{ flex:1; text-align:center; }
     .mobile-confirm{ display:block; }
     body{ padding-bottom: 86px; }
-    .grid{ padding:14px; gap:4px; }
-    .grid-row{ gap:4px; }
+    .grid{ padding:16px; gap:8px; }
+    .grid-row{ gap:8px; }
     .intro-strip{ padding:32px 16px 4px; }
+    .heart{ width:38px; height:38px; }
+    .heart svg{ width:17px; height:17px; }
+    .card .num{ font-size:11px; }
+  }
+  @media (min-width: 641px) and (max-width: 900px){
+    .grid{ padding:22px; }
+    .grid-row{ gap:8px; }
   }
 </style>
 </head>
@@ -504,6 +511,15 @@
     return card;
   }
 
+  // Tres chanzos de tamaño de fila: móbil (fotos grandes, ~2 por fila, coma Pixieset/Pic-Time no
+  // teléfono), tablet (~3 por fila) e escritorio (~4-5). Canto máis grande a foto obxectivo,
+  // menos columnas encaixan e máis elegante/lexible queda en pantallas pequenas.
+  function getLayoutParams(vw){
+    if (vw < 480) return { targetHeight: 205, gap: 8 };
+    if (vw < 900) return { targetHeight: 235, gap: 8 };
+    return { targetHeight: 260, gap: 6 };
+  }
+
   // Mesmo algoritmo de fila xustificada da galería de entrega: agrupa fotos nunha fila ata que,
   // escaladas a unha altura común, encherían o ancho do contedor, e logo escala esa fila exacta.
   function render(){
@@ -524,9 +540,7 @@
     }
 
     const containerWidth = grid.clientWidth || grid.parentElement.clientWidth;
-    const isMobile = window.innerWidth < 640;
-    const targetHeight = isMobile ? 120 : 260;
-    const gap = isMobile ? 4 : 6;
+    const { targetHeight, gap } = getLayoutParams(window.innerWidth);
 
     let row = [], aspectSum = 0;
 

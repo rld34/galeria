@@ -225,10 +225,17 @@
     .top-client{ display:none; }
     .btn-download{ display:none; }
     .mobile-dl{ display:block; }
-    .grid{ padding: 34px 16px 20px; gap:6px; }
-    .grid-row{ gap:6px; }
+    .grid{ padding: 24px 16px 20px; gap:8px; }
+    .grid-row{ gap:8px; }
     .intro-strip{ padding: 40px 18px 4px; }
     body{ padding-bottom: 88px; }
+    .photo-dl{ width:34px; height:34px; }
+    .photo-dl svg{ width:15px; height:15px; }
+    .photo-num{ font-size:10.5px; }
+  }
+  @media (min-width: 641px) and (max-width: 900px){
+    .grid{ padding: 40px 24px 20px; }
+    .grid-row{ gap:9px; }
   }
 </style>
 </head>
@@ -428,6 +435,15 @@
     return card;
   }
 
+  // Tres chanzos de tamaño de fila: móbil (fotos grandes, ~2 por fila, coma Pixieset/Pic-Time no
+  // teléfono), tablet (~3 por fila) e escritorio (~4-5). Canto máis grande a foto obxectivo,
+  // menos columnas encaixan e máis elegante/lexible queda en pantallas pequenas.
+  function getLayoutParams(vw){
+    if (vw < 480) return { targetHeight: 200, gap: 8 };
+    if (vw < 900) return { targetHeight: 225, gap: 9 };
+    return { targetHeight: 250, gap: 10 };
+  }
+
   // Algoritmo de fila xustificada (o mesmo patrón que usa Google Photos): agrupa fotos nunha fila
   // ata que, escaladas a unha altura común, encherían o ancho do contedor — logo escala esa fila
   // exactamente a ese ancho, así cada columna queda cun ancho distinto pero as filas encaixan perfectas.
@@ -437,9 +453,7 @@
     const list = photos.filter(p => category === 'all' || (p.tags || []).includes(category));
     emptyState.style.display = list.length === 0 ? 'block' : 'none';
     const containerWidth = grid.clientWidth || grid.parentElement.clientWidth;
-    const isMobile = window.innerWidth < 640;
-    const targetHeight = isMobile ? 130 : 250;
-    const gap = isMobile ? 6 : 10;
+    const { targetHeight, gap } = getLayoutParams(window.innerWidth);
 
     let row = [], aspectSum = 0;
 
