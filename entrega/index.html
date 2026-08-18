@@ -165,6 +165,7 @@
   .btn-icon:hover{ background: var(--bg-panel); transform: translateY(-1px); }
   .btn-icon.icon-outline svg{ width:16px; height:16px; stroke: var(--ink); fill:none; }
   .btn-icon.icon-fill svg{ width:15px; height:15px; stroke:none; fill: var(--ink); }
+  .btn-icon.icon-mask svg{ width:17px; height:17px; color: var(--ink); }
   .top-right{ display:flex; align-items:center; gap:10px; }
 
   .toast{
@@ -309,14 +310,20 @@
         <a class="btn-icon icon-outline" href="https://www.instagram.com/_rlede/" target="_blank" rel="noopener" aria-label="Instagram">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="2.5" width="19" height="19" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"/></svg>
         </a>
-        <a class="btn-icon icon-outline" href="https://es.linkedin.com/in/ricardolede" target="_blank" rel="noopener" aria-label="LinkedIn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="9" width="4" height="12.5"/><circle cx="4.5" cy="4.2" r="1.8"/><path d="M10.5 21.5V9M10.5 13.5c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5v8"/></svg>
+        <a class="btn-icon icon-mask" href="https://es.linkedin.com/in/ricardolede" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24">
+            <mask id="liMask"><rect x="0" y="0" width="24" height="24" fill="#fff"/><circle cx="6.5" cy="6.3" r="1.7" fill="#000"/><rect x="5" y="9.7" width="3" height="9" fill="#000"/><path d="M11 9.7h3v1.5c.6-1 1.7-1.8 3.1-1.8 2.6 0 4.4 1.8 4.4 5v5.3h-3v-4.9c0-1.4-.6-2.4-1.9-2.4-1.1 0-1.8.8-2.1 1.5-.1.2-.1.5-.1.9v4.9h-3c0-.2 0-9.2 0-10z" fill="#000"/></mask>
+            <rect x="2.2" y="2.2" width="19.6" height="19.6" rx="4" fill="currentColor" mask="url(#liMask)"/>
+          </svg>
         </a>
         <a class="btn-icon icon-fill" href="https://www.tiktok.com/@_rlede" target="_blank" rel="noopener" aria-label="TikTok">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 3c.3 2.1 1.8 3.6 4 3.9v2.7c-1.4 0-2.7-.4-3.9-1.2v6.6c0 3.3-2.7 6-6 6s-6-2.7-6-6 2.7-6 6-6c.3 0 .6 0 .9.1v2.8c-.3-.1-.6-.2-.9-.2-1.8 0-3.3 1.5-3.3 3.3s1.5 3.3 3.3 3.3 3.3-1.5 3.3-3.3V3h2.6z"/></svg>
         </a>
-        <a class="btn-icon icon-fill" href="https://wa.me/34605119559" target="_blank" rel="noopener" aria-label="WhatsApp">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.6 1.4 5.1L2 22l5-1.3c1.4.8 3.1 1.3 5 1.3 5.5 0 10-4.5 10-10S17.5 2 12 2zm4.6 12.9c-.2.6-1.2 1.1-1.7 1.2-.4.1-.9.2-1.5-.1-.4-.1-.8-.3-1.4-.5-2.4-1-4-3.4-4.1-3.6-.1-.1-1-1.3-1-2.4s.6-1.7.8-2c.2-.2.4-.3.6-.3h.5c.2 0 .4-.1.6.4.2.5.7 1.8.8 1.9.1.1.1.3 0 .4-.1.2-.1.3-.3.4-.1.2-.3.3-.4.5-.1.1-.3.3-.1.5.2.3.7 1.1 1.4 1.7 1 .8 1.8 1.1 2 1.2.2.1.4.1.5-.1.2-.2.6-.8.8-1 .2-.2.4-.2.6-.1.2.1 1.5.7 1.7.8.2.1.4.2.4.3.1.2.1.6-.1 1.2z"/></svg>
+        <a class="btn-icon icon-outline" href="https://wa.me/34605119559" target="_blank" rel="noopener" aria-label="WhatsApp">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2.5C6.8 2.5 2.5 6.8 2.5 12c0 1.8.5 3.5 1.4 5L2.5 21.5l4.6-1.4c1.4.8 3.1 1.3 4.9 1.3 5.2 0 9.5-4.3 9.5-9.5S17.2 2.5 12 2.5z"/>
+            <path d="M8.7 8.3c.2-.5.5-.5.7-.5h.5c.2 0 .4 0 .6.4.2.5.7 1.7.8 1.8.1.1.1.3 0 .4-.1.2-.1.3-.3.4-.1.2-.3.3-.4.5-.1.1-.3.3-.1.5.2.3.7 1 1.4 1.6 1 .8 1.7 1.1 2 1.2.2.1.4.1.5-.1.2-.2.6-.7.8-1 .2-.2.4-.2.6-.1.2.1 1.4.7 1.7.8.2.1.4.2.4.3.1.2.1.6-.1 1.1-.2.5-1.1 1-1.6 1.1-.4.1-.9.2-1.4-.1-.4-.1-.8-.3-1.4-.5-2.3-.9-3.9-3.2-4-3.4-.1-.1-.9-1.2-.9-2.3s.5-1.6.7-1.9z"/>
+          </svg>
         </a>
       </div>
       <div class="footer-links">

@@ -166,6 +166,11 @@
     text-align:center; padding: 50px 20px 70px; color: var(--faint); font-size:11px; letter-spacing:0.1em; text-transform:uppercase;
   }
   .bottom-logo{ height:18px; width:auto; opacity:0.9; }
+  .footer-site{
+    font-family: var(--display); font-weight:500; font-size:14px; letter-spacing:0.01em;
+    text-transform:none; color: var(--dim); text-decoration:none; transition: color .2s ease;
+  }
+  .footer-site:hover{ color: var(--white); }
   .footer-social{ display:flex; justify-content:center; gap:10px; }
   .footer-links{
     display:flex; justify-content:center; gap:22px; flex-wrap:wrap;
@@ -186,6 +191,7 @@
   .btn-icon:hover{ background: var(--panel); transform: translateY(-1px); }
   .btn-icon.icon-outline svg{ width:16px; height:16px; stroke: var(--white); fill:none; }
   .btn-icon.icon-fill svg{ width:15px; height:15px; stroke:none; fill: var(--white); }
+  .btn-icon.icon-mask svg{ width:17px; height:17px; color: var(--white); }
 
   .toast{
     position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(20px);
@@ -371,19 +377,25 @@
 
     <footer class="bottom-note">
       <a href="https://ricardolede.es" target="_blank" rel="noopener" class="logo-link"><img class="bottom-logo" src="data:image/png;base64,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" alt="Ricardo Lede"></a>
-      <span>Ricardo Lede — Fotografía · prototipo de galería privada</span>
+      <a class="footer-site" href="https://ricardolede.es" target="_blank" rel="noopener">ricardolede.es</a>
       <div class="footer-social">
         <a class="btn-icon icon-outline" href="https://www.instagram.com/_rlede/" target="_blank" rel="noopener" aria-label="Instagram">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="2.5" width="19" height="19" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"/></svg>
         </a>
-        <a class="btn-icon icon-outline" href="https://es.linkedin.com/in/ricardolede" target="_blank" rel="noopener" aria-label="LinkedIn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="9" width="4" height="12.5"/><circle cx="4.5" cy="4.2" r="1.8"/><path d="M10.5 21.5V9M10.5 13.5c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5v8"/></svg>
+        <a class="btn-icon icon-mask" href="https://es.linkedin.com/in/ricardolede" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24">
+            <mask id="liMask"><rect x="0" y="0" width="24" height="24" fill="#fff"/><circle cx="6.5" cy="6.3" r="1.7" fill="#000"/><rect x="5" y="9.7" width="3" height="9" fill="#000"/><path d="M11 9.7h3v1.5c.6-1 1.7-1.8 3.1-1.8 2.6 0 4.4 1.8 4.4 5v5.3h-3v-4.9c0-1.4-.6-2.4-1.9-2.4-1.1 0-1.8.8-2.1 1.5-.1.2-.1.5-.1.9v4.9h-3c0-.2 0-9.2 0-10z" fill="#000"/></mask>
+            <rect x="2.2" y="2.2" width="19.6" height="19.6" rx="4" fill="currentColor" mask="url(#liMask)"/>
+          </svg>
         </a>
         <a class="btn-icon icon-fill" href="https://www.tiktok.com/@_rlede" target="_blank" rel="noopener" aria-label="TikTok">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 3c.3 2.1 1.8 3.6 4 3.9v2.7c-1.4 0-2.7-.4-3.9-1.2v6.6c0 3.3-2.7 6-6 6s-6-2.7-6-6 2.7-6 6-6c.3 0 .6 0 .9.1v2.8c-.3-.1-.6-.2-.9-.2-1.8 0-3.3 1.5-3.3 3.3s1.5 3.3 3.3 3.3 3.3-1.5 3.3-3.3V3h2.6z"/></svg>
         </a>
-        <a class="btn-icon icon-fill" href="https://wa.me/34605119559" target="_blank" rel="noopener" aria-label="WhatsApp">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.6 1.4 5.1L2 22l5-1.3c1.4.8 3.1 1.3 5 1.3 5.5 0 10-4.5 10-10S17.5 2 12 2zm4.6 12.9c-.2.6-1.2 1.1-1.7 1.2-.4.1-.9.2-1.5-.1-.4-.1-.8-.3-1.4-.5-2.4-1-4-3.4-4.1-3.6-.1-.1-1-1.3-1-2.4s.6-1.7.8-2c.2-.2.4-.3.6-.3h.5c.2 0 .4-.1.6.4.2.5.7 1.8.8 1.9.1.1.1.3 0 .4-.1.2-.1.3-.3.4-.1.2-.3.3-.4.5-.1.1-.3.3-.1.5.2.3.7 1.1 1.4 1.7 1 .8 1.8 1.1 2 1.2.2.1.4.1.5-.1.2-.2.6-.8.8-1 .2-.2.4-.2.6-.1.2.1 1.5.7 1.7.8.2.1.4.2.4.3.1.2.1.6-.1 1.2z"/></svg>
+        <a class="btn-icon icon-outline" href="https://wa.me/34605119559" target="_blank" rel="noopener" aria-label="WhatsApp">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2.5C6.8 2.5 2.5 6.8 2.5 12c0 1.8.5 3.5 1.4 5L2.5 21.5l4.6-1.4c1.4.8 3.1 1.3 4.9 1.3 5.2 0 9.5-4.3 9.5-9.5S17.2 2.5 12 2.5z"/>
+            <path d="M8.7 8.3c.2-.5.5-.5.7-.5h.5c.2 0 .4 0 .6.4.2.5.7 1.7.8 1.8.1.1.1.3 0 .4-.1.2-.1.3-.3.4-.1.2-.3.3-.4.5-.1.1-.3.3-.1.5.2.3.7 1 1.4 1.6 1 .8 1.7 1.1 2 1.2.2.1.4.1.5-.1.2-.2.6-.7.8-1 .2-.2.4-.2.6-.1.2.1 1.4.7 1.7.8.2.1.4.2.4.3.1.2.1.6-.1 1.1-.2.5-1.1 1-1.6 1.1-.4.1-.9.2-1.4-.1-.4-.1-.8-.3-1.4-.5-2.3-.9-3.9-3.2-4-3.4-.1-.1-.9-1.2-.9-2.3s.5-1.6.7-1.9z"/>
+          </svg>
         </a>
       </div>
       <div class="footer-links">
